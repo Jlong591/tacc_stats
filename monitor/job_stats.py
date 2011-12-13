@@ -1,4 +1,4 @@
-#!/opt/apps/python/2.7.1/bin/python
+#!/usr/bin/env python
 import gzip, os, numpy, signal, string, subprocess, sys, time
 # signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
@@ -6,7 +6,7 @@ import gzip, os, numpy, signal, string, subprocess, sys, time
 # TODO Sanity check on rollover.
 # TODO Check that input values are not wider than allowed.
 
-base_dir = "/scratch/projects/tacc_stats"
+base_dir = os.environ.get("TACC_STATS_HOME", "/scratch/projects/tacc_stats")
 archive_dir = os.path.join(base_dir, "archive")
 job_info_cmd = os.path.join(base_dir, "scripts", "tacc_job_info")
 
@@ -23,7 +23,7 @@ def trace(fmt, *args):
 def error(fmt, *args):
     msg = fmt % args
     sys.stderr.write(prog + ": " + msg)
-    
+
 def fatal(fmt, *args):
     msg = fmt % args
     sys.stderr.write(prog + ": " + msg)

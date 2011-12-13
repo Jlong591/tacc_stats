@@ -1,4 +1,4 @@
-#!/opt/apps/python/2.7.1/bin/python
+#!/usr/bin/env python
 import human, job_stats, numpy, signal, string, sys
 
 if __name__ == '__main__':
@@ -181,7 +181,7 @@ def display_job_report(info):
 
 
 if __name__ == '__main__':
-    job_stats.verbose = False
+    # job_stats.verbose = False
     if len(sys.argv) > 1:
         for arg in sys.argv[1:]:
             job_info = job_stats.get_job_info(arg)

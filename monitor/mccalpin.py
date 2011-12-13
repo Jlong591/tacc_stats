@@ -1,4 +1,4 @@
-#!/opt/apps/python/2.7.1/bin/python
+#!/usr/bin/env python
 import human, job_stats, numpy, os, signal, string, sys
 
 sock_schema_desc = 'DRAM,E HT0,E HT1,E HT2,E'
@@ -38,7 +38,7 @@ def print_mcc_stats(job):
         job_stats.error("job `%s' has bad or missing amd64_sock data\n", job.id)
         return
     core_schema = job.get_schema('amd64_core')
-    if not core_schema or core_schema.desc != core_schema_desc:    
+    if not core_schema or core_schema.desc != core_schema_desc:
         job_stats.error("job `%s' has bad or missing amd64_core data\n", job.id)
         return
     print "TIME", "HOST", sock_stats_hdr, core_stats_hdr
