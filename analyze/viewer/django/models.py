@@ -2,8 +2,16 @@
 
 from django.db import models
 
+class System(models.Model):
+    name = models.CharField(max_length=128)
+
+class Node(models.Model):
+    name = models.CharField(max_length=128)
+    system = models.ForeignKey(System)
+
 class Job(models.Model):
-    id = models.BigIntegerField(primary_key=True)
+    system = models.ForeignKey(System)
+    acct_id = models.BigIntegerField(primary_key=True)
     owner = models.CharField(max_length=128)
     queue = models.CharField(max_length=16, null=True)
     queue_wait_time = models.IntegerField(null=True)
@@ -16,6 +24,15 @@ class Job(models.Model):
     pe = models.CharField(max_length=8, null=True)
     failed = models.BooleanField()
     exit_status = models.IntegerField(null=True)
+
+class Monitor(models.Model):
+    kind = models.CharField(max_length=32)
+    system = models.ForeignKey(System)
+
+class Measurement(mdoels.Model):
+    monitor = models.ForeignKey(Monitor)
+
+
     USER_FLOPS = models.BigIntegerField(null=True)
     SSE_FLOPS = models.BigIntegerField(null=True)
     DCSF = models.BigIntegerField(null=True)
