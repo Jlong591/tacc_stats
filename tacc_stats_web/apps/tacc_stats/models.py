@@ -1,6 +1,7 @@
 """The database models of tacc stats"""
 
 from django.db import models
+"""test"""
 
 class System(models.Model):
     """Details about the cluster"""
