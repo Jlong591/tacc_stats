@@ -1,0 +1,18 @@
+#!/bin/bash
+#$ -V
+#$ -cwd
+#$ -N moveJobDataPkl
+#$ -j y
+#$ -o /work/01902/jlong591/jobs/moveJobDataPkl.oJobID
+#$ -pe 16way 16
+#$ -q long
+#$ -l h_rt=40:30:00
+#$ -M justinlong@utexas.edu
+#$ -m be
+TIME=1309273201
+while [ $TIME -le 1330495200 ]
+do
+	module load python/2.7.1
+	python /share/home/01902/jlong591/work/tacc_stats/monitor/staging.py -t $TIME
+	TIME=$(( $TIME + 86400 ))
+done
