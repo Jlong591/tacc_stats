@@ -1,4 +1,4 @@
-"""GETS JOB INFO, PICKLE INDIVIDUAL JOBS, THEN COMPRESSES AND MOVES IT TO TACC-STATS
+"""GETS JOB INFO AND MOVES IT TO TACC-STATS
 	-t  [--time: allows input of time to get past information
 		     Default value is todays date]"""
 #imports
@@ -46,7 +46,6 @@ def main():
   moveJobs(time)
 
 def makeDirs(time):
-"""Make directories needed for time's job information"""
  #remove if anything stored in tmp to save space
  if os.path.exists(TMP_PATH):
   print "Removing TMP path"
@@ -68,9 +67,6 @@ def makeDirs(time):
  subprocess.call(["ln","-s",HOSTLIST_SCRATCH_PATH,HOSTS_SYM])
 
 def moveJobs(time):
-"""get account information from sge_acct.reader. It returns an iterator.
-Then make list of jobs from iterator, and try to obtain job info 
-from each acct. Then pickle them, compress at end, and move it over to tacc-stats."""
 #get start_time
  global JOB_PATH
  global TACC_STATS_PATH
@@ -104,7 +100,6 @@ from each acct. Then pickle them, compress at end, and move it over to tacc-stat
  subprocess.call(["rm","-rf",RANGER_WORK_PATH])
 
 def log(acct):
-"""logs errors to error file that gets sent over when jobs are transfered"""
  global JOB_PATH
  error=open(JOB_PATH+"/errors",'a')
  error.write("Errors processing job with account: " + acct+"\n")
