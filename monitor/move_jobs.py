@@ -41,7 +41,7 @@ def main():
  #process options
  for o, a in opts:
   if o in ("-t","--time"):
-   time=a
+   time=long(a)
   makeDirs(time)
   moveJobs(time)
 
