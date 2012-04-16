@@ -47,12 +47,10 @@ def main():
 
 def makeDirs(time):
  #remove if anything stored in tmp to save space
- if os.path.exists(TMP_PATH):
-  print "Removing TMP path"
-  subprocess.call(["rm","-rf",TMP_PATH])
+ if not(os.path.exists(TMP_PATH)):
  #make working dirs and symlinks
- print "Creating TMP path"
- subprocess.call(["mkdir",TMP_PATH])
+  print "Creating TMP path"
+  subprocess.call(["mkdir",TMP_PATH])
  if not(os.path.exists(RANGER_WORK_PATH)):
   print "Creating WORK path"
   subprocess.call(["mkdir",RANGER_WORK_PATH])
@@ -97,7 +95,8 @@ def moveJobs(time):
 #transfer to tacc-stats
  subprocess.call(["scp",RANGER_WORK_PATH+"/"+str(start_time)+".tar.gz",TACC_STATS_PATH+"/"+str(start_time)+"/"])
 #remove data from /work
- subprocess.call(["rm","-rf",RANGER_WORK_PATH])
+ subprocess.call(["mv",RANGER_WORK_PATH+"/"+str(start_time)+".tar.gz",RANGER_WORK_PATH+"/"+str(start_time)+"/"])
+ subprocess.call(["rm","-rf",RANGER_WORK_PATH+"/"+str(start_time)])
 
 def log(acct):
  global JOB_PATH
