@@ -82,7 +82,7 @@ def moveJobs(time):
  for acct in lis:
   try:
    j=job.from_acct(acct)
-  except IOError:
+  except TypeError:
    log(acct)
   #TODO: Handle this better...just skips job if it can't get the job
   #thisPath=os.path.join([JOB_PATH,str(j.id)+".pkl"])
@@ -101,7 +101,7 @@ def moveJobs(time):
 def log(acct):
  global JOB_PATH
  error=open(JOB_PATH+"/errors",'a')
- error.write("Errors processing job with account: " + acct+"\n")
+ error.write("Errors processing job with account: " + str(acct)+"\n")
  error.close()
 
 if __name__ == "__main__":
