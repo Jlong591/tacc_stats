@@ -32,20 +32,25 @@ HOSTS_SYM=os.path.join(TMP_PATH,"prolog_host_lists")
 
 def main():
  #parse command line options
+ global ONEDAY
  try:
   opts, args = getopt.getopt(sys.argv[1:],'t:')
  except getopt.error, msg:
   print msg
   print "No time given, using today's date"
-  time=time.mktime(datetime.date.today().timetuple())
+  t=time.mktime(datetime.date.today().timetuple())-ONEDAY
+  makeDirs(t)
+  moveJobs(t)
  #process options
  for o, a in opts:
   if o in ("-t","--time"):
-   time=long(a)
-  makeDirs(time)
-  moveJobs(time)
+   t=long(a)
+  else:
+   t=time.mktime(datetime.data.today().timetuple())-ONEDAY
+  makeDirs(t)
+  moveJobs(t)
 
-def makeDirs(time):
+def makeDirs(t):
  #remove if anything stored in tmp to save space
  if not(os.path.exists(TMP_PATH)):
  #make working dirs and symlinks
@@ -55,7 +60,7 @@ def makeDirs(time):
   print "Creating WORK path"
   subprocess.call(["mkdir",RANGER_WORK_PATH])
  global JOB_PATH
- JOB_PATH=os.path.join(JOB_PATH,str(long(time)))
+ JOB_PATH=os.path.join(JOB_PATH,str(long(t)))
  if not(os.path.exists(JOB_PATH)):
   print "Creating JOBPATH"
   subprocess.call(["mkdir",JOB_PATH])
@@ -64,12 +69,12 @@ def makeDirs(time):
  subprocess.call(["ln","-s",ARCHIVE_SCRATCH_PATH,ARCH_SYM])
  subprocess.call(["ln","-s",HOSTLIST_SCRATCH_PATH,HOSTS_SYM])
 
-def moveJobs(time):
+def moveJobs(t):
 #get start_time
  global JOB_PATH
  global TACC_STATS_PATH
  global RANGER_WORK_PATH
- start_time=long(time)
+ start_time=long(t)
  end_time=start_time + ONEDAY
 
 #open job archive and put in list
