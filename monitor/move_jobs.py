@@ -16,7 +16,7 @@ import subprocess
 #amount of ms in one day (for time stamps)
 ONEDAY=86400
 #path to where jobs stored on staging box
-TACC_STATS_PATH="jlong591@tacc-stats:/home/jlong591/job-data"
+TACC_STATS_PATH="jlong591@tacc-stats:/home/jlong591/job-data/"
 #tmp path for symlinks
 TMP_PATH="/tmp/TS"
 #where the jobs are written to
@@ -98,7 +98,7 @@ def moveJobs(t):
 #compress dir containing .pkl files
  subprocess.call(["tar","zcvf",RANGER_WORK_PATH+"/"+str(start_time)+".tar.gz","-C",RANGER_WORK_PATH,str(start_time)])
 #transfer to tacc-stats
- subprocess.call(["scp",RANGER_WORK_PATH+"/"+str(start_time)+".tar.gz",TACC_STATS_PATH+"/"+str(start_time)+"/"])
+ subprocess.call(["scp",RANGER_WORK_PATH+"/"+str(start_time)+".tar.gz",TACC_STATS_PATH])
 #remove data from /work
  subprocess.call(["mv",RANGER_WORK_PATH+"/"+str(start_time)+".tar.gz",RANGER_WORK_PATH+"/"+str(start_time)+"/"])
  subprocess.call(["rm","-rf",RANGER_WORK_PATH+"/"+str(start_time)])
