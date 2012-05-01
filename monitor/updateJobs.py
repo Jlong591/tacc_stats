@@ -75,10 +75,11 @@ def main():
  #process options
  for o, a in opts:
   if o in ("-t","--time"):
-   if str(a) in LIST_OF_TIMES:
+   if (str(a)+".tar.gz") in LIST_OF_TIMES:
     print "Processing jobs for " + str(a)
     time=long(a)
     specifiedJobs(time)
+    backup(time)
    else:
     print "Time specified has no job data; exiting"
 
@@ -86,7 +87,7 @@ def specifiedJobs(time):
  """if a time is specified, process jobs for only that day"""
  global JOB_PATH
  #subprocess.call(['cd',JOB_PATH+"/"+str(time)])
- thispath=JOB_PATH+str(time)+"/"
+ thispath=JOB_PATH
  #extract jobs from specified day
  subprocess.call(['tar','-C',thispath,'-xzvf',thispath+str(time)+".tar.gz"])
  #phew, we made it. now get all the jobs in a list
@@ -101,16 +102,15 @@ def allJobs():
  global JOB_PATH
  global LIST_OF_TIMES
  for time in LIST_OF_TIMES:
-  workingPath=os.path.join(JOB_PATH,time)
-  subprocess.call(['cd',workingPath])
+  workingPath=JOB_PATH
   try:
-   subprocess.call(['tar','xzvf',workingPath+"/"+time+".tar.gz"])
+   subprocess.call(['tar','-C',workingPath,'-xzvf',workingPath+str(time)+".tar.gz"])
   except:
    print "No file to decompress. Trying next time"
   #might seem redundant, but the tar file extacts a dir named by the time
-  subprocess.call(['cd',time])
-  job_list=commands.getoutput('ls').split()
-  processJobs(job_list)
+  workingPath=JOB_PATH+str(time).split('.')[0]
+  job_list=commands.getoutput('ls '+workingPath).split()
+  processJobs(workingPath,job_list)
 
 
 def processJobs(path,job_list):
@@ -122,11 +122,14 @@ def processJobs(path,job_list):
   #file errors contains error files, obv not going to update db
   if j =='"errors':
    continue
-  f=open(path+"/"+j,'rb')
-  a_job=pickle.load(f)
-  f.close()
-  #TODO: figure out if it's better to update all jobs individually or separate
-  updateDatabase(system,a_job)
+  try:
+   f=open(path+"/"+j,'rb')
+   a_job=pickle.load(f)
+   f.close()
+   #TODO: figure out if it's better to update all jobs individually or separate
+   updateDatabase(system,a_job)
+  except IOError:
+   print "Error processing job"
 
 def updateDatabase(system,a_job):
  if system.job_set.filter(acct_id=int(a_job.id)):
@@ -204,6 +207,12 @@ def strip_system_name(system_name, node):
   end = end - 1 if node[end-1] == '.' else end
   node = node[:end]
  return node
+
+def backup(t):
+ global JOB_PATH
+ path=JOB_PATH+str(t)+".tar.gz"
+ #note: need to fix keys with this
+ subprocess.call(["scp",path,"jlong591@ranch.tacc.utexas.edu:/home/01902/jlong591/job-data"])
 
 if __name__ == "__main__":
  main()
